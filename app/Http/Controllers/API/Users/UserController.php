@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['only' => ['show', 'update', 'destroy']]);
-    }
-
     public function store(StoreUser $request)
     {
         $user = new User();
