@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,6 +19,15 @@ class UserTest extends TestCase
         parent::setUp();
 
         $this->faker = Factory::create('pt_BR');
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->user) {
+            $this->user->delete();
+        }
+
+        parent::tearDown();
     }
 
     public function testCanCreateUser()
@@ -41,6 +51,27 @@ class UserTest extends TestCase
                 'updated_at',
                 'created_at',
                 'id'
+            ]);
+
+        if ($response->status() === 201) {
+            $this->user = User::find($response->json('id'));
+        }
+    }
+
+    public function testCannotCreateUserWithInvalidRequest()
+    {
+        $request = [];
+
+        $response = $this->postJson('/api/users', $request);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'message',
+                'errors' => [
+                    'name',
+                    'email',
+                    'password',
+                ]
             ]);
     }
 }
