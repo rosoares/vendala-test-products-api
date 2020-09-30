@@ -27,3 +27,5 @@ Route::group([
     Route::post('me', 'API\Auth\AuthController@me');
 
 });
+
+Route::resource('users', 'API\Users\UserController')->except(['edit', 'create', 'index']);
