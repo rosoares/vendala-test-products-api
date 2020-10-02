@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Libraries\MercadoColors;
 use Illuminate\Console\Command;
 
 class Colors extends Command
@@ -35,8 +36,12 @@ class Colors extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(MercadoColors $mercadoColors)
     {
-        return 0;
+        if(! $mercadoColors->getColorsFromMercadoLivre()) {
+            $this->error("A error was ocurred while inserting colors to database");
+        } else {
+            $this->info('Color inserted with success !!!');
+        }
     }
 }

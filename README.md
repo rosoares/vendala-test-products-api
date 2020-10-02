@@ -13,3 +13,5 @@
     `DB_DATABASE=[nome do banco que você criou]`
     `DB_USERNAME=[seu usuário do MySQL]`
     `DB_PASSWORD=[sua senha de acesso ao MySQL]`
+7. Rode o comando `php artisan migrate`
+8. Rode o comando `php artisan colors:get` para pegar as cores da API pública do mercado livre   

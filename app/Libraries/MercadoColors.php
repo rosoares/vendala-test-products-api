@@ -3,24 +3,31 @@
 
 namespace App\Libraries;
 
+use App\Models\Colors;
 use Illuminate\Support\Facades\Http;
 
 class MercadoColors
 {
     protected $list;
 
-    public function getList()
+    public function getColorsFromMercadoLivre()
     {
-        $url = $this->buildURL();
-
-        $response = Http::get($url);
+        $response  = $this->getAttributesList();
 
         $collection = $this->makeCollection($response->body());
 
-        $this->list = $collection
-            ->where('id', 'COLOR')
-            ->first()
+        $values = $collection
+            ->firstWhere('id', 'COLOR')
             ->values;
+        
+        return  $this->insertColorsToDatabase($values);
+    }
+
+    public function getAttributesList()
+    {
+        $url = $this->buildURL();
+
+        return $response = Http::get($url);
     }
 
     private function buildURL()
@@ -35,6 +42,30 @@ class MercadoColors
         $array = json_decode($jsonResponse);
 
         return collect($array);
+    }
+
+    private function prepareColorsToInsert($values)
+    {
+        $values = collect($values)->map(function ($item, $key){
+           return array(
+               'id' => $item->id,
+               'name' => $item->name
+           );
+        });
+
+        return $values->toArray();
+    }
+
+    public function insertColorsToDatabase($values)
+    {
+
+        $insert = $this->prepareColorsToInsert($values);
+
+        if(! Colors::insert($insert)) {
+            return false;
+        }
+        
+        return true;
     }
 
 }
