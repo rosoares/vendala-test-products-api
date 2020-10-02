@@ -25,6 +25,7 @@ Route::group([
     Route::post('logout', 'API\Auth\AuthController@logout');
     Route::post('refresh', 'API\Auth\AuthController@refresh');
     Route::post('me', 'API\Auth\AuthController@me');
+    Route::get('unauthorized', 'API\Auth\AuthController@unauthorized')->name('unauthorized');
 
 });
 
