@@ -30,4 +30,5 @@ Route::group([
 });
 
 Route::resource('users', 'API\Users\UserController')->except(['edit', 'create', 'index']);
-Route::resource('products', 'API\Products\ProductController')->except(['edit', 'create']);
+Route::resource('products', 'API\Products\ProductController')->except(['edit', 'create', 'show']);
+Route::get('products/{id}/{variation?}', 'API\Products\ProductController@show');

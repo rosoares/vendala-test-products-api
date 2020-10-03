@@ -90,4 +90,11 @@ class ProductController extends Controller
 
         return response()->json($products);
     }
+
+    public function show($id, $variation = null)
+    {
+        $product = $this->productsRepository->showProduct($id, $variation);
+
+        return ($product);
+    }
 }

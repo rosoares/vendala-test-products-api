@@ -137,6 +137,28 @@ class ProductsRepository
         return $this->productsModel->with('colorVariations')->get();
     }
 
+    public function showProduct($id, $variation)
+    {
+        $product = null;
+
+        if($variation) {
+            return $this->productsModel->with([
+                    'colorVariations' => function ($query) use ($variation) {
+                        return $query->find($variation);
+                    }
+                ])
+                ->find($id);
+        } else {
+            return $this->productsModel
+                ->with([
+                    'colorVariations' => function ($query) use ($variation) {
+                        return $query->where('color_id', null);
+                    }
+                ])
+                ->find($id);
+        }
+    }
+
     protected function validateColorVariations($variation, $rules)
     {
         $validator = Validator::make($variation, $rules);
