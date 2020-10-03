@@ -18,4 +18,9 @@ class ProductsVariations extends Model
         'available_stock',
         'price'
     ];
+
+    public function color()
+    {
+        return $this->belongsTo(Colors::class, 'color_id');
+    }
 }

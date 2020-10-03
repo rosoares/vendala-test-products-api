@@ -134,6 +134,10 @@ class ProductsTest extends TestCase
                         'created_at',
                         'updated_at',
                         'deleted_at',
+                        'color' => [
+                            'id',
+                            'name'
+                        ]
                     ],
                     [
                         'product_id',
@@ -144,6 +148,10 @@ class ProductsTest extends TestCase
                         'created_at',
                         'updated_at',
                         'deleted_at',
+                        'color' => [
+                            'id',
+                            'name'
+                        ]
                     ],
                 ]
             ]);
