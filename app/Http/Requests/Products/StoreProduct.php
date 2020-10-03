@@ -26,10 +26,21 @@ class StoreProduct extends FormRequest
         return [
             'name' => 'required',
             'slug' => 'required|unique:products,slug',
+            'hasColorVariation' => 'required|boolean',
+            'first_stock' => $this->request->get('hasColorVariation') ? [] : 'required|numeric',
+            'available_stock' => $this->request->get('hasColorVariation') ? [] : 'required|numeric',
+            'price' => $this->request->get('hasColorVariation') ? [] : 'required|numeric',
+            'variations' => $this->request->get('hasColorVariation') ? 'required|array' : []
+        ];
+    }
+
+    public static function variationRules()
+    {
+        return [
+            'color_id' => 'required|exists:colors,id',
             'first_stock' => 'required|numeric',
             'available_stock' => 'required|numeric',
             'price' => 'required|numeric',
-            'hasColorVariation' => 'required|boolean'
         ];
     }
 }

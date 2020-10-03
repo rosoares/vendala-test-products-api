@@ -8,10 +8,13 @@ use App\Models\Products;
 use App\Models\ProductsVariations;
 use App\Repositories\ProductsRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
     protected $productsRepository;
+
+    protected $errors;
 
     public function __construct(ProductsRepository $productsRepository)
     {
@@ -25,24 +28,28 @@ class ProductController extends Controller
             'name',
             'description',
             'slug',
+            'hasColorVariation'
         ]);
 
-        $productVariationData = $request->only([
-            'first_stock',
-            'available_stock',
-            'price'
-        ]);
+        $productVariationData = null;
 
-        // TODO color variation
+        if($request->input('hasColorVariation')) {
+            $productVariationData = $request->input('variations');
 
+        } else {
+            $productVariationData = $request->only([
+                'first_stock',
+                'available_stock',
+                'price'
+            ]);
+        }
         try{
             $product = $this->productsRepository->createProduct($productData, $productVariationData);
 
             return response()->json($product, 201);
 
         } catch (\Exception $exception) {
-            return response()->json($exception->getMessage(), 500);
+            return response()->json($exception->getMessage(), $exception->getCode());
         }
-
     }
 }
