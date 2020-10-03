@@ -159,6 +159,24 @@ class ProductsRepository
         }
     }
 
+    public function deleteProduct($id)
+    {
+        if(! $this->productsModel->destroy($id)) {
+            throw new \Exception('Cannot delete product', 500);
+        }
+
+        return true;
+    }
+
+    public function deleteVariation($id)
+    {
+        if(! $this->productsVariationsModel->destroy($id)) {
+            throw new \Exception('Cannot delete product variation', 500);
+        }
+
+        return true;
+    }
+
     protected function validateColorVariations($variation, $rules)
     {
         $validator = Validator::make($variation, $rules);

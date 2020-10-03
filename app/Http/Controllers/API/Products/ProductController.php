@@ -97,4 +97,24 @@ class ProductController extends Controller
 
         return ($product);
     }
+
+    public function destroy($id)
+    {
+        try {
+            $this->productsRepository->deleteProduct($id);
+            return response()->json('Deleted', 204);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    public function deleteVariation($id)
+    {
+        try {
+            $this->productsRepository->deleteVariation($id);
+            return response()->json('Deleted', 204);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), $exception->getCode());
+        }
+    }
 }
