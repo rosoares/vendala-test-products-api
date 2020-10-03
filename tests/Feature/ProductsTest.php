@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Colors;
 use App\Models\Products;
 use App\Models\ProductsVariations;
 use App\User;
@@ -101,7 +102,78 @@ class ProductsTest extends TestCase
                     ]
                 ]
             ]);
+    }
 
+    public function testCanCreateProductWithVariations()
+    {
+        $this->authUser();
 
+        $product = $this->getProductWithVariation();
+
+        $product['variations'] = $this->getVariations();
+
+        $response = $this->postJson('api/products', $product);
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure([
+                'id',
+                'name',
+                'description',
+                'slug',
+                'created_by',
+                'created_at',
+                'updated_at',
+                'color_variations' => [
+                    [
+                        'product_id',
+                        'color_id',
+                        'first_stock',
+                        'available_stock',
+                        'price',
+                        'created_at',
+                        'updated_at',
+                        'deleted_at',
+                    ],
+                    [
+                        'product_id',
+                        'color_id',
+                        'first_stock',
+                        'available_stock',
+                        'price',
+                        'created_at',
+                        'updated_at',
+                        'deleted_at',
+                    ],
+                ]
+            ]);
+    }
+
+    private function getProductWithVariation()
+    {
+        return [
+            'name' => 'Camisa Nike',
+            'description' => 'Camisa Nike Algodão',
+            'slug' => 'camisa-nike',
+            'hasColorVariation' => true
+        ];
+    }
+
+    private function getVariations()
+    {
+        return [
+            [
+                'color_id' => Colors::inRandomOrder()->first()->id,
+                'first_stock' => 50,
+                'available_stock' => 50,
+                'price' => 99.90,
+            ],
+            [
+                'color_id' => Colors::inRandomOrder()->first()->id,
+                'first_stock' => 60,
+                'available_stock' => 60,
+                'price' => 97.90,
+            ]
+        ];
     }
 }
