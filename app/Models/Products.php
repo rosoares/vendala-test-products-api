@@ -11,7 +11,7 @@ class Products extends Model
 
     protected $fillable = ['name', 'description', 'slug', 'created_by'];
 
-    protected $dates = ['created_by', 'created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public function createdBy()
     {
