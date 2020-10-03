@@ -9,5 +9,7 @@ class Colors extends Model
 {
     use SoftDeletes;
 
+    public $incrementing = false;
+
     protected $fillable = ['id', 'name'];
 }
