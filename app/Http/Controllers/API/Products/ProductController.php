@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Products;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Products\StoreProduct;
+use App\Http\Requests\Products\UpdateProduct;
 use App\Models\Products;
 use App\Models\ProductsVariations;
 use App\Repositories\ProductsRepository;
@@ -45,6 +46,38 @@ class ProductController extends Controller
         }
         try{
             $product = $this->productsRepository->createProduct($productData, $productVariationData);
+
+            return response()->json($product, 201);
+
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    public function update(UpdateProduct $request, $id)
+    {
+        $productData = $request->only([
+            'name',
+            'description',
+            'slug',
+            'hasColorVariation'
+        ]);
+
+        $productVariationData = null;
+
+        if($request->input('hasColorVariation')) {
+            $productVariationData = $request->input('variations');
+
+        } else {
+            $productVariationData = $request->only([
+                'first_stock',
+                'available_stock',
+                'price'
+            ]);
+        }
+
+        try{
+            $product = $this->productsRepository->updateProduct($id, $productData, $productVariationData);
 
             return response()->json($product, 201);
 

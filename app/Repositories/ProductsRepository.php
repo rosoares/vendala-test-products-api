@@ -71,6 +71,34 @@ class ProductsRepository
         return $product;
     }
 
+    public function updateProduct($id, $productData, $productVariationData)
+    {
+        DB::beginTransaction();
+
+        $product = $this->productsModel->find($id);
+        $product->fill($productData);
+
+        if (! $product->save()) {
+            throw new \Exception('Cannot update the product', 500);
+        }
+
+        if(! Arr::get($productData, 'hasColorVariation')) {
+            $productVariation = $this->productsVariationsModel->where('product_id', $id)->first();
+            $productVariation->fill($productVariationData);
+
+            if (! $productVariation->save()) {
+                DB::rollBack();
+                throw new \Exception('Cannot update the product variation', 500);
+            }
+        }
+
+        DB::commit();
+
+        $product->load('colorVariations');
+
+        return $product;
+    }
+
     protected function validateColorVariations($variation)
     {
         $rules = StoreProduct::variationRules();
