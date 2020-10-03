@@ -36,7 +36,6 @@ class ProductController extends Controller
 
         if($request->input('hasColorVariation')) {
             $productVariationData = $request->input('variations');
-
         } else {
             $productVariationData = $request->only([
                 'first_stock',
@@ -67,7 +66,6 @@ class ProductController extends Controller
 
         if($request->input('hasColorVariation')) {
             $productVariationData = $request->input('variations');
-
         } else {
             $productVariationData = $request->only([
                 'first_stock',

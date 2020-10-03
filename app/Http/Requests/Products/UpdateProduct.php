@@ -39,4 +39,14 @@ class UpdateProduct extends FormRequest
             'variations' => $this->request->get('hasColorVariation') ? 'sometimes|required|array' : []
         ];
     }
+
+    public static function variationRules()
+    {
+        return [
+            'color_id' => 'sometimes|required|exists:colors,id',
+            'first_stock' => 'sometimes|required|numeric',
+            'available_stock' => 'sometimes|required|numeric',
+            'price' => 'sometimes|required|numeric',
+        ];
+    }
 }

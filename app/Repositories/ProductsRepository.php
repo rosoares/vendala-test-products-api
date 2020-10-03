@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Http\Requests\Products\StoreProduct;
+use App\Http\Requests\Products\UpdateProduct;
 use App\Models\Products;
 use App\Models\ProductsVariations;
 use Illuminate\Support\Arr;
@@ -50,7 +51,10 @@ class ProductsRepository
             DB::commit();
         } else {
             foreach ($productVariationData as $variation) {
-                if(! $this->validateColorVariations($variation)) {
+
+                $rules = StoreProduct::variationRules();
+
+                if(! $this->validateColorVariations($variation, $rules)) {
                     DB::rollBack();
                     throw new \Exception($this->getErrors(), 422);
                 }
@@ -73,6 +77,7 @@ class ProductsRepository
 
     public function updateProduct($id, $productData, $productVariationData)
     {
+        
         DB::beginTransaction();
 
         $product = $this->productsModel->find($id);
@@ -90,6 +95,34 @@ class ProductsRepository
                 DB::rollBack();
                 throw new \Exception('Cannot update the product variation', 500);
             }
+        } else {
+            foreach ($productVariationData as $variation) {
+
+                $rules = UpdateProduct::variationRules();
+
+                if(! $this->validateColorVariations($variation, $rules)) {
+                    DB::rollBack();
+                    throw new \Exception($this->getErrors(), 422);
+                }
+
+                $databaseVariation = $this->productsVariationsModel->where([
+                   'product_id' => $id,
+                   'color_id' => $variation['color_id']
+                ])->first();
+
+                if ($databaseVariation) {
+                    $databaseVariation->fill($variation);
+                    if(! $databaseVariation->save()) {
+                        DB::rollBack();
+                        throw new \Exception('Cannot update the product variation', 500);
+                    }
+                } else {
+                    if (! $product->colorVariations()->create($variation)) {
+                        DB::rollBack();
+                        throw new \Exception('Cannot create the product variation', 500);
+                    }
+                }
+            }
         }
 
         DB::commit();
@@ -99,10 +132,8 @@ class ProductsRepository
         return $product;
     }
 
-    protected function validateColorVariations($variation)
+    protected function validateColorVariations($variation, $rules)
     {
-        $rules = StoreProduct::variationRules();
-
         $validator = Validator::make($variation, $rules);
 
         if($validator->fails()) {
