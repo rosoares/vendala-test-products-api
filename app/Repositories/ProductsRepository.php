@@ -132,6 +132,11 @@ class ProductsRepository
         return $product;
     }
 
+    public function getAllProducts()
+    {
+        return $this->productsModel->with('colorVariations')->get();
+    }
+
     protected function validateColorVariations($variation, $rules)
     {
         $validator = Validator::make($variation, $rules);

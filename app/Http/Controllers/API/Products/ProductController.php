@@ -83,4 +83,11 @@ class ProductController extends Controller
             return response()->json($exception->getMessage(), $exception->getCode());
         }
     }
+
+    public function index()
+    {
+        $products = $this->productsRepository->getAllProducts();
+
+        return response()->json($products);
+    }
 }
