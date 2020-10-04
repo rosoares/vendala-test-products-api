@@ -33,3 +33,4 @@ Route::resource('users', 'API\Users\UserController')->except(['edit', 'create', 
 Route::resource('products', 'API\Products\ProductController')->except(['edit', 'create', 'show']);
 Route::get('products/{id}/{variation?}', 'API\Products\ProductController@show');
 Route::delete('products/variations/{id}','API\Products\ProductController@deleteVariation');
+Route::get('colors', 'API\Colors\ColorsController@index');
