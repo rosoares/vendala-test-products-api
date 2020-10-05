@@ -430,7 +430,7 @@ Resposta:
     ]
 }
 ```
-*NOTA: caso não seja passado o id_da_variacao o endpoint retornará o produto sem variação*
+*NOTA: caso seja passado o id_da_variacao o endpoint retornará o produto apenas com aquela variação*
 
 ------------
 

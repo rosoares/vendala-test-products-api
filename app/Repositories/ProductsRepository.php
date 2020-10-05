@@ -150,11 +150,7 @@ class ProductsRepository
                 ->find($id);
         } else {
             return $this->productsModel
-                ->with([
-                    'colorVariations' => function ($query) use ($variation) {
-                        return $query->where('color_id', null);
-                    }
-                ])
+                ->with('colorVariations')
                 ->find($id);
         }
     }
