@@ -33,9 +33,9 @@ class UpdateProduct extends FormRequest
             ],
             'name' => 'sometimes|required',
             'hasColorVariation' => 'required|boolean',
-            'first_stock' => $this->request->get('hasColorVariation') ? [] : 'sometimes|required|numeric',
-            'available_stock' => $this->request->get('hasColorVariation') ? [] : 'sometimes|required|numeric',
-            'price' => $this->request->get('hasColorVariation') ? [] : 'sometimes|required|numeric',
+            'first_stock' => ! $this->request->get('hasColorVariation') ? [] : 'sometimes|required|numeric',
+            'available_stock' => ! $this->request->get('hasColorVariation') ? [] : 'sometimes|required|numeric',
+            'price' => ! $this->request->get('hasColorVariation') ? [] : 'sometimes|required|numeric',
             'variations' => $this->request->get('hasColorVariation') ? 'sometimes|required|array' : []
         ];
     }
